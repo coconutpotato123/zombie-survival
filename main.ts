@@ -1,4 +1,46 @@
-let zombieImgs = [
+function addZombie () {
+    randomZombieNum = randint(0, zombieImgs.length - 1)
+    zombie = sprites.create(zombieImgs[randomZombieNum], SpriteKind.Enemy)
+    zombie.follow(oldLady, 20)
+    tiles.placeOnRandomTile(zombie, sprites.castle.tilePath5)
+}
+info.onCountdownEnd(function () {
+    wave = wave + 1
+    if (wave <= 3) {
+        game.splash("Wave " + wave + " is coming!")
+        nextWave()
+    } else {
+        game.splash("The potatoes are on their way to save you!")
+        game.over(true)
+    }
+})
+function nextWave () {
+    info.startCountdown(10)
+    if (wave == 1) {
+        for (let index = 0; index < 3; index++) {
+            addZombie()
+        }
+    } else if (wave == 2) {
+        for (let index = 0; index < 5; index++) {
+            addZombie()
+        }
+    } else if (wave == 3) {
+        for (let index = 0; index < 6; index++) {
+            addZombie()
+        }
+    }
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    game.splash("You've been bitten! You're turning into a zombie!")
+    game.over(false)
+})
+let randomZombieSaying = ""
+let zombies: Sprite[] = []
+let zombie: Sprite = null
+let randomZombieNum = 0
+let wave = 0
+let zombieImgs: Image[] = []
+zombieImgs = [
 img`
     ...cccccccccccccc...
     ..c67777777777777c..
@@ -66,10 +108,10 @@ img`
     .c44bb76ffff6fff...
     .cb4b77ffff7ffff...
     c63d777ffff7ffff...
-    c67377777777777c...
-    c6737777fff7777c...
+    c6737f77777777fc...
+    c6737ffffffffffc...
     c67777777777777c...
-    c67777777777777c...
+    c67777777ffff77c...
     .c677777777777c....
     c6777f677777777c...
     c6777cc76777777cc..
@@ -302,74 +344,22 @@ img`
     .....ccc.....e......
     `
 ]
-
-
 let zombieSayings = [
-    "Grrrr",
-    "Yummm",
-    "I WANT BRAINS!",
-    "Urgggggg",
-    "COME BACK HERE!"
+"Grrrr",
+"Yummm",
+"I WANT BRAINS!",
+"Urgggggg",
+"COME BACK HERE!",
+"I WANT TO BITE YOU!"
 ]
 scene.setBackgroundColor(7)
 tiles.setTilemap(tilemap`level_1`)
-
-let wave = 1
+wave = 1
 nextWave()
-
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function(sprite: Sprite, otherSprite: Sprite) {
-    game.splash("You've been bitten! You're turning into a zombie!")
-    game.over(false)
-})
-
-info.onCountdownEnd(function() {
-    wave = wave + 1
-    if (wave <= 3){
-        game.splash("Wave " + wave + " is coming!")
-        nextWave()  
-    }
-    else{
-        game.splash("The potatoes are on their way to save you!")
-        game.over(true)
-    }
-})
-
-game.onUpdateInterval(4000, function() {
-    let zombies = sprites.allOfKind(SpriteKind.Enemy)
-    for (let z of zombies){
-     let randomZombieSaying = zombieSayings[randint(0, zombieSayings.length-1)]
+game.onUpdateInterval(4000, function () {
+    zombies = sprites.allOfKind(SpriteKind.Enemy)
+    for (let z of zombies) {
+        randomZombieSaying = zombieSayings[randint(0, zombieSayings.length - 1)]
         z.say(randomZombieSaying, 4000)
     }
 })
-
-function addZombie (){
-    let randomZombieNum = randint(0, zombieImgs.length-1)
-    let zombie = sprites.create(zombieImgs[randomZombieNum], SpriteKind.Enemy)
-    zombie.follow(oldLady, 20)
-    tiles.placeOnRandomTile(zombie, sprites.castle.tilePath5)
-  
-} 
-
-function nextWave(){
-    info.startCountdown(10)
-    if (wave == 1){
-        for (let i = 0; i < 3; i++){
-            addZombie()  
-        }
-       
-    }
-    else if (wave == 2){
-        for (let i = 0; i < 5; i++){
-            addZombie()  
-        }
-    }
-    
-  else if (wave == 3){
-        for (let i = 0; i < 6; i++){
-            addZombie()  
-        }   
-    }      
-        
-    
-
-}
