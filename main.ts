@@ -302,6 +302,13 @@ img`
     .....ccc.....e......
     `
 ]
-
 scene.setBackgroundColor(7)
 tiles.setTilemap(tilemap`level_1`)
+
+addZombie()
+
+function addZombie (){
+    let randomZombieNum = randint(0, zombieImgs.length-1)
+    let zombie = sprites.create(zombieImgs[randomZombieNum], SpriteKind.Enemy)
+    zombie.follow(oldLady)
+} 
