@@ -3,7 +3,31 @@ function addZombie () {
     zombie = sprites.create(zombieImgs[randomZombieNum], SpriteKind.Enemy)
     zombie.follow(oldLady, 20)
     tiles.placeOnRandomTile(zombie, sprites.castle.tilePath5)
+
+
+    // To create left Image
+    let leftImg = zombieImgs[randomZombieNum].clone()
+    leftImg.flipX()
+
+    sprites.setDataImage(zombie, "costume-right", zombieImgs[randomZombieNum])
+    sprites.setDataImage(zombie, "costume-left", leftImg)
 }
+
+game.onUpdate(function() {
+    let zombies = sprites.allOfKind(SpriteKind.Enemy)
+
+    for (let z of zombies ){
+        if (z.vx > 0){
+            let rightImg = sprites.readDataImage(z, "costume-right")
+            z.setImage(rightImg)
+        }
+        else{
+            let leftImg = sprites.readDataImage(z, "costume-left")
+            z.setImage(leftImg)
+        }
+    }
+})
+
 info.onCountdownEnd(function () {
     wave = wave + 1
     if (wave <= 3) {
